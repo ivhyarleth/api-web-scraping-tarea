@@ -28,7 +28,6 @@ def lambda_handler(event, context):
         }
 
     # Extraer los encabezados de la tabla
-    # Si hay <thead> úsalo, si no, toma todos los <th>
     thead = table.find("thead")
     if thead:
         headers = [th.get_text(strip=True) for th in thead.find_all("th")]
@@ -43,7 +42,6 @@ def lambda_handler(event, context):
         if not cells:
             continue  # salta filas vacías
 
-        # Mapear cada celda con su encabezado correspondiente
         row_dict = {}
         for i, cell in enumerate(cells):
             if i < len(headers):
@@ -59,7 +57,8 @@ def lambda_handler(event, context):
 
     # Guardar los datos en DynamoDB
     dynamodb = boto3.resource("dynamodb")
-    table_dynamo = dynamodb.Table("TablaWebScrapping")
+    # 👇 AQUÍ CAMBIÉ EL NOMBRE DE LA TABLA
+    table_dynamo = dynamodb.Table("TablaSismosIGP")
 
     # Eliminar todos los elementos de la tabla antes de agregar los nuevos
     scan = table_dynamo.scan()
@@ -73,7 +72,6 @@ def lambda_handler(event, context):
 
     # Insertar los nuevos datos
     for index, row in enumerate(rows, start=1):
-        # Agregamos un ID único y un número de fila
         row["#"] = index
         row["id"] = str(uuid.uuid4())
         table_dynamo.put_item(Item=row)
