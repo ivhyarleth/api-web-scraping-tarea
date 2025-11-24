@@ -5,11 +5,9 @@ import json
 from datetime import datetime
 
 def lambda_handler(event, context):
-    # Año actual (puedes fijarlo a 2025 si quieres)
-    year = datetime.now().year
 
     # Endpoint JSON del IGP (el que viste en Network)
-    url = f"https://ultimosismo.igp.gob.pe/api/ultimo-sismo/ajaxb/{year}"
+    url = f"https://ultimosismo.igp.gob.pe/api/ultimo-sismo/ajaxb/2025"
 
     # Llamar a la API JSON
     resp = requests.get(url, timeout=10)
@@ -97,3 +95,4 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps(sismos_10, ensure_ascii=False)
     }
+
